@@ -16,12 +16,14 @@ from urllib3.util.retry import Retry
 
 # Configure retry + timeout session
 session = requests.Session()
+
 retries = Retry(
-    total=5,
-    backoff_factor=2,
-    status_forcelist=[429, 500, 502, 503, 504],
-    allowed_methods=["GET"]
+    total=5,  # Try at most 5 times per request
+    backoff_factor=2, # Exponential backoff: wait 2s, then 4s, then 8s... between retries
+    status_forcelist=[429,500,502,503,504],  # Only retry on these HTTP status codes
+    allowed_methods=["GET"]     # Only retry GET requests (not POST, PUT, etc.)
 )
+
 adapter = HTTPAdapter(max_retries=retries)
 session.mount("https://", adapter)
 session.mount("http://", adapter)
@@ -207,6 +209,7 @@ while job.state != 'DONE':
 
 # Return Data Info
 print(f"Food Basket data of shape {data.shape} has been successfully retrieved, saved, and appended to the BigQuery table.")
+
 
 
 
