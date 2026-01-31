@@ -30,4 +30,4 @@ jobs:
 
     - name: Run your script
       run: |
-        python trending.py
+        python google.py
