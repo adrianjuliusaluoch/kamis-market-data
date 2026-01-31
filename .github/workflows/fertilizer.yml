@@ -1,4 +1,4 @@
-name: Export Fertilizer Market Prices to Google BigQuery
+name: Upload KAMIS Fertilizer Market Prices to Google BigQuery
 
 on:
   schedule:
