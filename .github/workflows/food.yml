@@ -28,4 +28,4 @@ jobs:
 
     - name: Run your script
       run: |
-        python food_basket.py
+        python food.py
