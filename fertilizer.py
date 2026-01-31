@@ -7,8 +7,24 @@ import numpy as np
 import requests
 from io import StringIO
 import urllib3
+import sys
 import os
 import time
+
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+# Configure retry + timeout session
+session = requests.Session()
+retries = Retry(
+    total=5,
+    backoff_factor=2,
+    status_forcelist=[429, 500, 502, 503, 504],
+    allowed_methods=["GET"]
+)
+adapter = HTTPAdapter(max_retries=retries)
+session.mount("https://", adapter)
+session.mount("http://", adapter)
 
 now = datetime.now()
 year = now.year
@@ -43,12 +59,12 @@ for commodity in commodities:
             url = base_url.format("" if offset == 0 else f"/{offset}")
             print(f"Fetching: {url}")
             
-            response = requests.get(url, verify=False)
+            response = session.get(url, verify=False, timeout=60)
             market_prices = pd.read_html(StringIO(response.text))
 
         except Exception as e:
-            print(f"Error fetching data: {e}")
-            break
+            print(f"[WARN] KAMIS timeout or error for {url}: {e}")
+            break  # stop paging for this commodity, continue script
         
         market_prices = market_prices[0]
         
@@ -56,6 +72,12 @@ for commodity in commodities:
         offset += 3000
 
 print(f"Collected {len(bigdata)} rows in total")
+
+if bigdata.empty:
+    print("[WARN] No data collected from KAMIS. Skipping BigQuery load.")
+    
+    # Exit script cleanly with success
+    sys.exit(0)
 
 # Clean Names
 bigdata.columns = (
