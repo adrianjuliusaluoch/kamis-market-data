@@ -1,4 +1,4 @@
-name: Export Food Market Prices to Google BigQuery
+name: Upload KAMIS Food Market Prices to Google BigQuery
 
 on:
   schedule:
