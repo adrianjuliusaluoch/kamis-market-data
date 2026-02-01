@@ -101,19 +101,33 @@ bigdata.drop(columns=['grade', 'sex'], inplace=True)
 # Define Table ID
 table_id = f"data-storage-485106.fertilizer.market_prices_{table_suffix}"
 
-if now.day == 1 and now.hour == 0:
+if now.day == 1: 
+
+    # Check if current month table already has current month data
     try:
+        check_sql = f"""
+                    SELECT COUNT(*) AS cnt
+                    FROM `{table_id}`
+                    WHERE EXTRACT(MONTH FROM CAST(date AS DATETIME)) = {now.month}
+                      AND EXTRACT(YEAR FROM CAST(date AS DATETIME)) = {now.year}
+                    """
+        check_df = client.query(check_sql).to_dataframe()
+        has_current_month_data = check_df.loc[0, "cnt"] > 0
+    except NotFound:
+        has_current_month_data = False  # Table doesn't exist yet
+  
+    if not has_current_month_data:
+      try:
         prev_month_date = now.replace(day=1) - timedelta(days=1)
         prev_table_suffix = f"{prev_month_date.year}_{prev_month_date.strftime('%b').lower()}"
         prev_table_id = f"data-storage-485106.fertilizer.market_prices_{prev_table_suffix}"
         
         try:
             prev_data = client.query(
-                f"SELECT * FROM `{prev_table_id}`"
+                f"SELECT * FROM `{prev_table_id}` ORDER BY date DESC"
             ).to_dataframe()
             bigdata = pd.concat([prev_data, bigdata], ignore_index=True)
             print(f"Appended {len(prev_data)} rows from previous month table.")
-            
         except NotFound:
             print("No previous month table found, skipping append.")
         
@@ -125,8 +139,8 @@ if now.day == 1 and now.hour == 0:
         job.result()
         print(f"All data loaded into {table_id}, total rows: {len(bigdata)}")
 
-    except Exception as e:
-        print(f"Error during 1st-of-month load: {e}")
+      except Exception as e:
+          print(f"Error during 1st-of-month load: {e}")
 
 else:
     # 🔥 NORMAL WORKFLOW (this was missing)
@@ -142,8 +156,9 @@ else:
 sql = (f"""
         SELECT *
         FROM `{table_id}`
+        ORDER BY start_date DESC;
        """)
-    
+  
 # Run SQL Query
 data = client.query(sql).to_dataframe()
 
