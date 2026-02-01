@@ -156,7 +156,7 @@ else:
 sql = (f"""
         SELECT *
         FROM `{table_id}`
-        ORDER BY start_date DESC;
+        ORDER BY date DESC;
        """)
   
 # Run SQL Query
