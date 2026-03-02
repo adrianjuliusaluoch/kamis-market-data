@@ -36,21 +36,11 @@ jobs:
         jupyter nbconvert --to notebook --execute newsletter.ipynb --output executed_newsletter.ipynb
       continue-on-error: true
     
-    - name: Update and commit executed notebook
-      run: |
-        # Add a timestamp inside notebook metadata
-        python - <<EOF
-                import json
-                from datetime import datetime
-                from pathlib import Path
-                
-                nb_file = Path("executed_newsletter.ipynb")
-                nb = json.loads(nb_file.read_text(encoding="utf-8"))
-                nb.setdefault("metadata", {})["last_run_utc"] = datetime.utcnow().isoformat() + "Z"
-                nb_file.write_text(json.dumps(nb, indent=1), encoding="utf-8")
-                EOF
+    - name: Add timestamp to executed notebook
+      run: python3 -c "import json, datetime, pathlib; nb_file=pathlib.Path('executed_newsletter.ipynb'); nb=json.loads(nb_file.read_text(encoding='utf-8')); nb.setdefault('metadata', {})['last_run_utc']=datetime.datetime.utcnow().isoformat()+'Z'; nb_file.write_text(json.dumps(nb, indent=1), encoding='utf-8')"
 
-        # Commit and push
+    - name: Commit executed notebook
+      run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add executed_newsletter.ipynb
