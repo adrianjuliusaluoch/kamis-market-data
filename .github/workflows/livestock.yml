@@ -5,6 +5,10 @@ on:
     - cron: '0 * * * *'  # Runs every hour
   workflow_dispatch:  # ✅ Enables manual trigger
 
+concurrency:
+  group: upload-kamis-livestock-bq
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
