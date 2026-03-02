@@ -5,6 +5,9 @@ on:
     - cron: '45 4 * * *'  # 7:45 AM EAT (4:45 AM UTC)
   workflow_dispatch:  # ✅ Enables manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   get_and_upload_market_data:
     runs-on: ubuntu-latest
@@ -31,3 +34,25 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         jupyter nbconvert --to notebook --execute newsletter.ipynb --output executed_newsletter.ipynb
+      continue-on-error: true
+    
+    - name: Update and commit executed notebook
+      run: |
+        # Add a timestamp inside notebook metadata
+        python - <<EOF
+                import json
+                from datetime import datetime
+                from pathlib import Path
+                
+                nb_file = Path("executed_newsletter.ipynb")
+                nb = json.loads(nb_file.read_text(encoding="utf-8"))
+                nb.setdefault("metadata", {})["last_run_utc"] = datetime.utcnow().isoformat() + "Z"
+                nb_file.write_text(json.dumps(nb, indent=1), encoding="utf-8")
+                EOF
+
+        # Commit and push
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add executed_newsletter.ipynb
+        git commit -m "Auto update executed newsletter [skip ci]" || echo "No changes"
+        git push origin HEAD:main
