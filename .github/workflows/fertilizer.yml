@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
-  group: upload-kamis-fertilizer
+  group: upload-kamis-fertilizer-bq
   cancel-in-progress: false
 
 permissions:
