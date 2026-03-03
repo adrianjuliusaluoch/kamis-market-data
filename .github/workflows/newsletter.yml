@@ -1,4 +1,4 @@
-name: Market Price Newsletter
+name: Dry Maize Market Price Newsletter
 
 on:
   schedule:
