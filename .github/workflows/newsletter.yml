@@ -34,7 +34,6 @@ jobs:
         GENAI_API_KEY: ${{ secrets.GENAI_API_KEY }}
       run: |
         jupyter nbconvert --to notebook --execute newsletter.ipynb --output executed_newsletter.ipynb
-      continue-on-error: true
     
     - name: Add timestamp to executed notebook
       run: python3 -c "import json, datetime, pathlib; from datetime import timezone; nb_file=pathlib.Path('newsletter.ipynb'); nb=json.loads(nb_file.read_text(encoding='utf-8')); nb.setdefault('metadata', {})['last_run_utc']=datetime.datetime.now(timezone.utc).isoformat(); nb_file.write_text(json.dumps(nb, indent=1), encoding='utf-8')"
@@ -47,3 +46,4 @@ jobs:
         git commit -m "Auto update executed newsletter [skip ci]" || echo "No changes"
         git pull --rebase origin main
         git push origin HEAD:main
+      continue-on-error: true
