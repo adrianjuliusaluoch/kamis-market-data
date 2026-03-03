@@ -1,9 +1,13 @@
-name: Dry Maize Market Price Newsletter
+name: Market Price Newsletter for Dry Maize
 
 on:
   schedule:
     - cron: '45 4 * * *'  # 7:45 AM EAT (4:45 AM UTC)
   workflow_dispatch:  # ✅ Enables manual trigger
+
+concurrency:
+  group: newsletter-maize-gm
+  cancel-in-progress: false
 
 permissions:
   contents: write
