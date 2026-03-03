@@ -2,7 +2,7 @@ name: Market Price Newsletter for Dry Maize
 
 on:
   schedule:
-    - cron: '45 4 * * *'  # 7:45 AM EAT (4:45 AM UTC)
+    - cron: '45 4 * * 4'  # 7:45 AM EAT (4:45 AM UTC) on Thursdays only
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
