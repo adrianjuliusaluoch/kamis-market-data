@@ -31,7 +31,7 @@ jobs:
 
     - name: Run your script
       env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GENAI_API_KEY: ${{ secrets.GENAI_API_KEY }}
       run: |
         jupyter nbconvert --to notebook --execute newsletter.ipynb --output executed_newsletter.ipynb
       continue-on-error: true
