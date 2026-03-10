@@ -1,4 +1,4 @@
-# Last run: Tue Mar 10 10:55:42 UTC 2026
+# Last run: Tue Mar 10 11:43:09 UTC 2026
 # Import Packages
 from google.cloud import bigquery
 from google.api_core.exceptions import NotFound
