@@ -43,9 +43,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Define Commodities
 commodities = [
     140, # Cattle
-    168, # Goats
     167, # Sheep
-    211, # Pigs
     227, # Chicken
 ]
 
