@@ -2,7 +2,7 @@ name: Upload KAMIS Livestock Market Prices to Google BigQuery
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour
+    - cron: '0 9,21 * * *'  # Runs at 12:00 PM and 12:00 AM Nairobi time
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
