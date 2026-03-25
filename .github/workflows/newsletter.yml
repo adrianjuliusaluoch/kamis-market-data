@@ -2,7 +2,7 @@ name: Market Price Newsletter for Dry Maize
 
 on:
   schedule:
-    - cron: '45 4 * * *'  # 7:45 AM EAT / 4:45 AM UTC, every day
+    - cron: '0 5 * * 5'  # Every Friday at 8:00 AM EAT (5:00 AM UTC)
   workflow_dispatch:  # ✅ Enables manual trigger
 
 concurrency:
@@ -15,6 +15,7 @@ permissions:
 jobs:
   get_and_upload_market_data:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
     - name: Checkout repository
