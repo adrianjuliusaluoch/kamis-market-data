@@ -100,7 +100,7 @@ bigdata['retail'] = pd.to_numeric(bigdata['retail'].str.extract(r'(\d+\.?\d*)')[
 # Define Table ID
 table_id = f"data-storage-485106.livestock.market_prices_{table_suffix}"
 
-if now.day == 1: 
+if now.day == 1 or now.day == 2: 
 
     # Check if current month table already has current month data
     try:
