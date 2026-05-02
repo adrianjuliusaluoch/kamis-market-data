@@ -2,8 +2,8 @@ name: Upload KAMIS Food Market Prices to Google BigQuery
 
 on:
   schedule:
-    - cron: '0 9,21 * * *'  # Runs at 12:00 PM and 12:00 AM Nairobi time
-  workflow_dispatch:  # ✅ Enables manual trigger
+    - cron: '0 * * * *'  # Runs every hour at minute 0
+  workflow_dispatch:  # Manual trigger still available
 
 concurrency:
   group: upload-kamis-food-bq
@@ -15,7 +15,7 @@ permissions:
 jobs:
   get_and_upload_market_data:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
 
     steps:
     - name: Checkout repository
