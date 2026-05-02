@@ -15,6 +15,8 @@ import time
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 # Configure retry + timeout session
 session = requests.Session()
 
